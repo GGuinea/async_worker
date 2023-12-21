@@ -4,9 +4,13 @@ import (
 	"async_worker/config"
 	"async_worker/internal"
 	"async_worker/internal/backgroundJobs/workers"
+	"async_worker/internal/drivers/rest"
 	jobprocessor "async_worker/internal/pkg/jobProcessor"
 	"async_worker/internal/pkg/jobProcessor/migrations"
+	someresource "async_worker/internal/someResource"
 	"context"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -18,6 +22,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	defer backgroundJob.DbPool.Close()
+
+	router := gin.Default()
+	someResourceDependencies := someresource.NewSomeResourceDependencies(backgroundJob)
+	rest.BuildRoutes(router, someResourceDependencies)
+	router.Run(":8080")
 }
 
 func setupBackgroundJobProcessor(ctx context.Context, cfg *config.Config, deps *internal.CompositionRoot) (*jobprocessor.JobProcessorClient, error) {
