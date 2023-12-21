@@ -1,5 +1,10 @@
 package config
 
+type Config struct {
+	Db                        DbConfig
+	BackgroundProcessorConfig BackgroundProcessorConfig
+}
+
 type DbConfig struct {
 	Host   string
 	Port   string
@@ -8,8 +13,8 @@ type DbConfig struct {
 	DbName string
 }
 
-type Config struct {
-	Db DbConfig
+type BackgroundProcessorConfig struct {
+	MaxWorkers int
 }
 
 func NewConfig() *Config {
@@ -20,5 +25,7 @@ func NewConfig() *Config {
 		Pass:   "postgres",
 		DbName: "postgres",
 	}
-	return &Config{Db: dbConfig}
+
+	backgroundProcessorConfig := BackgroundProcessorConfig{MaxWorkers: 100}
+	return &Config{Db: dbConfig, BackgroundProcessorConfig: backgroundProcessorConfig}
 }
