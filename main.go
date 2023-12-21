@@ -28,6 +28,7 @@ func setupBackgroundJobProcessor(ctx context.Context, cfg *config.Config, deps *
 
 	backgroundWorkersMgmnt := workers.NewBackgroundJobWorkers(deps.BackgroundWorkers)
 	workers.AddDefaultWorker(backgroundWorkersMgmnt)
+	workers.AddNewWorker(backgroundWorkersMgmnt, &workers.NewRequestWorker{})
 
 	jobProcessorClient, err := jobprocessor.NewJobProcessorClient(ctx, deps, cfg.BackgroundProcessorConfig)
 	if err != nil {
@@ -35,5 +36,4 @@ func setupBackgroundJobProcessor(ctx context.Context, cfg *config.Config, deps *
 	}
 
 	return jobProcessorClient, nil
-
 }
