@@ -2,6 +2,8 @@ package someresource
 
 import (
 	"async_worker/internal/someResource/app"
+	"fmt"
+	"math/rand"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +22,7 @@ func BuildRoutes(router *gin.Engine, deps *SomeResourceDependencies) {
 }
 
 func (srr *SomeResourceRouter) handleSomeResourceRequest(c *gin.Context) {
-	srr.service.HandleServiceRequest(c, "user")
+	srr.service.HandleServiceRequest(c, fmt.Sprintf("user %d", rand.Intn(1000)))
 	c.JSON(200, gin.H{
 		"message": "ok",
 	})
